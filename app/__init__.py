@@ -8,6 +8,6 @@ app.config.from_object('config')
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
 
-from .models import gestores,clientes
+from .models import gestores,clientes, produtos, pedidos
 from .routes import routes
 
