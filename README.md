@@ -7,6 +7,12 @@
 - Flask Marshmallow
 - Mysqlclient
 
+# Execução
+
+Console -> python
+>> from app import db
+>> db.create_all()
+
 ## Requisitos de Negócios
 ### Cadastrar o gestor
 /gestor _Method_ : POST
