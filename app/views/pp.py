@@ -142,45 +142,9 @@ def put_order(id):
             return jsonify({'message' : 'Status do pedido modificado para cancelado.', 'data' : {}}), 200
         else:
             return jsonify({'message' : 'Não foi possível alterar o status do pedido.', 'data' : {}}), 400
-            
+
     return jsonify({'message' : 'usuário inválido.', 'data' : {}}), 400
 
 def test():
-    body = request.get_json()
-
-    #verificar o cliente do pedido
-    cliente_obj = Clientes.query.filter_by(email=body['email']).first()
-    if not cliente_obj:
-        return jsonify({'message' : 'Não foi possível realizar o pedido, cliente não cadastrado.', 'data' : {}}), 500
-    
-    #verficar os produtos
-    precoTotal = 0.0
-    for p  in body['products']:
-        produto_obj = Products.query.filter_by(id=p['id']).first()
-        if not produto_obj:
-            return jsonify({'message' : 'Não foi possível realizar o pedido, produto não cadastrado.', 'data' : {}}), 500
-        
-        produto = product_schema.dump(produto_obj)
-        precoTotal = precoTotal + (produto['preco'] * p['quantidade'])
-    
-    pedido_obj = Orders(valorT=precoTotal, status='Criado', cliente_email=body['email'])
-    db.session.add(pedido_obj)
-    db.session.commit()
-
-    for p  in body['products']:
-        produto_obj = Products.query.filter_by(id=p['id']).first()
-        pedido_obj.products.append(produto_obj)    
-    db.session.commit()
-
-    pedido = order_schema.dump(pedido_obj)
-    for pro in pedido_obj.products:
-        print(ordersproducts.query.filter_by(order_id = pedido['id'], product_id = pro.to_json()['id']).first())
-
-    
-    produtos_json = [pro.to_json() for pro in pedido_obj.products]
-
-    return jsonify({'message' : 'Pedido cadastrado com sucesso.' , 'data': {"id":pedido['id'], 
-    'Valor Total': precoTotal, 'produtos': produtos_json, 'status':pedido['status']}}), 201
-
-    return body
+    ...
 
