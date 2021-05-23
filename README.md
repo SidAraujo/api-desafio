@@ -10,10 +10,11 @@
 
 ## Execução
 
-Console -> python
-from app import db
+Abrir console python na pasta do respositório:
 
-db.create_all()
+* from app import db
+
+* db.create_all()
 
 Após criar o banco executar o arquivo run.py
 
