@@ -16,7 +16,7 @@ Abrir console python na pasta do respositório:
 
 * db.create_all()
 
-Após criar o banco executar o arquivo run.py
+Após criar o banco executar o arquivo _run.py_
 
 ## Requisitos de Negócios
 ### Cadastrar o gestor
