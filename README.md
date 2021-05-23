@@ -32,10 +32,10 @@ Após criar o banco executar o arquivo _run.py_
 - O identificador é o email.
 
 ### Login
-Cliente
-/login _Method_ : POST
-Gestor
-/gestor/login _Method_ : POST
+* Cliente
+  * /login _Method_ : POST
+* Gestor
+  * /gestor/login _Method_ : POST
 
 - Informar email e senha
 - Sessão máxima de 10 minutos
