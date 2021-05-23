@@ -16,11 +16,13 @@ def post_protudo(current_gestor):
     return pp.post_produto()
 
 @app.route('/produtos/<id>', methods=['PUT'])
-def put_produto(id):
+@helper.token_gestor_required
+def put_produto(current_gestor, id):
     return pp.put_produto(id)
 
 @app.route('/produtos/<id>', methods=['DELETE'])
-def delete_produto(id):
+@helper.token_gestor_required
+def delete_produto(current_gestor, id):
     return pp.delete_produto(id)
 
 @app.route('/pedidos', methods=['POST'])
@@ -29,7 +31,8 @@ def post_pedido(current_cliente):
     return pp.post_pedido()
 
 @app.route('/pedidos/<email>', methods=['GET'])
-def get_pedidos(email):
+@helper.token_required
+def get_pedidos(current_cliente, email):
     return pp.get_pedidos(email)
 
 @app.route('/pedidos/<id>', methods=['PUT'])
@@ -43,7 +46,3 @@ def authenticate():
 @app.route('/gestor/login', methods = ['POST'])
 def authenticate_gestor():
     return helper.auth_gestor()
-
-@app.route('/test', methods = ['POST'])
-def test():
-    return pp.test()
