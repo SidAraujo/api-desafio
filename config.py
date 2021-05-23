@@ -1,3 +1,3 @@
 DEBUG = True
-SQLALCHEMY_DATABASE_URI = 'mysql://root:@localhost/api'
+SQLALCHEMY_DATABASE_URI = 'mysql://root:@localhost/apiv2'
 SQLALCHEMY_TRACK_MODIFICATIONS = False
