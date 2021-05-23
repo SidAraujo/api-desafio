@@ -13,7 +13,6 @@ def auth():
     body = request.get_json()
 
     if not body or ("email" not in body) or ("senha" not in body):
-        print("Aqui")
         return jsonify({'message' : 'Não foi possível verificar.', 'WWW-Authenticate' : 'Basic auth="Login required"'}), 401
     
     cliente = cliente_by_email(body['email'])
@@ -34,9 +33,12 @@ def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         #token = request.args.get('token')
-        token = request.get_json()['token']
-        if not token:
+        body = request.get_json()
+        if body == None:
             return jsonify({'message' : 'É necessário um token.', 'data' : {}}), 401
+        if (not 'token' in body):
+            return jsonify({'message' : 'É necessário um token.', 'data' : {}}), 401
+        token = body['token']
         
         try:
             data = jwt.decode(token, app.config['SECRET_KEY'], algorithms="HS256")
@@ -62,7 +64,6 @@ def auth_gestor():
     #colocar hash
     if gestor and check_password_hash(gestor.senha, body['senha']):
         token = jwt.encode({'email':gestor.email, 'exp' : datetime.datetime.now() +  datetime.timedelta(hours=3, minutes=10)}, app.config['SECRET_KEY'], algorithm="HS256")
-        print(app.config['SECRET_KEY'])
         return jsonify({'message': 'Validado com sucesso.', 'token': token,
                         'exp': datetime.datetime.now() + datetime.timedelta(hours=3, minutes=10)})
     
@@ -77,15 +78,14 @@ def token_gestor_required(f):
             return jsonify({'message' : 'É necessário um token.', 'data' : {}}), 401
         token = body['token']
         try:
-            print(app.config['SECRET_KEY'])
             data = jwt.decode(token, app.config['SECRET_KEY'], algorithms="HS256")
-            print(data)
+
             current_gestor = gestor_by_email(email=data['email'])
             if current_gestor == None:
                 return jsonify({'message' : 'Token do gestor inválido ou expirado', 'data' : {}}), 401
         except Exception:
             traceback.print_exc()
-            return jsonify({'message' : 'Token do gestor inválido ou expirado 2', 'data' : {}}), 401
+            return jsonify({'message' : 'Token do gestor inválido ou expirado.', 'data' : {}}), 401
         return f(current_gestor, *args, **kwargs)
     return decorated_gestor
     
