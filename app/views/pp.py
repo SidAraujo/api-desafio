@@ -139,6 +139,8 @@ def put_pedido(id):
         return jsonify({'message' : 'Gestor não cadastrado.'}), 400
 
     order_obj = Pedidos.query.filter_by(id=id).first()
+    if order_obj == None:
+        return jsonify({'message' : 'Pedido não encontrado.'}), 400
 
     if pedido_schema.dump(order_obj)['status'] == 'cancelado':
         return jsonify({'message' : 'Pedido já se encontra cancelado.', 'data' : {}}), 200
@@ -184,7 +186,7 @@ def put_pedido(id):
     if cliente_obj:
         #verifica se o pedido é realmente do cliente
         pedidos_c = cliente_obj.pedidos.filter_by(id = id).first()
-        if pedidos_c and pedido_schema.dump(pedidos_c)['status'] == 'criado':
+        if pedidos_c and pedido_schema.dump(pedidos_c)['status'] == 'criado' and body['status'] == 'cancelado':
             order_obj.status = 'cancelado'
             db.session.add(order_obj)
             db.session.commit()
@@ -194,6 +196,4 @@ def put_pedido(id):
 
     return jsonify({'message' : 'usuário inválido.', 'data' : {}}), 400
 
-def test():
-    ...
 
