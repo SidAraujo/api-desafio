@@ -1,7 +1,7 @@
 from werkzeug.security import generate_password_hash
 from app import db
 from flask import request,jsonify
-from ..models.gestores import Gestores, gestor_schema, gestores_schema
+from ..models import Gestores, gestor_schema, gestores_schema
 
 import traceback
 
@@ -10,7 +10,7 @@ def post_gestor():
 
     gestores_objetos = Gestores.query.limit(1).all()
     if(gestores_objetos):
-        return jsonify({'status' : 400,'message' : 'Cadastro Inválido.'})
+        return jsonify({'message' : 'Cadastro Inválido.'}), 400
    
     #Deve possuir pelo menos: nome do estabelecimento, email e senha
     if ("nome_estabelecimento" not in body):
@@ -21,7 +21,7 @@ def post_gestor():
         return jsonify({'message' : 'É necessário a senha.', 'data' : {}}), 400
     
     p_hash = generate_password_hash(body['senha'])
-    gestor = Gestores(nome_estabelecimento=body['nome_estabelecimento'], email = body['email'], senha = body['senha'])
+    gestor = Gestores(nome_estabelecimento=body['nome_estabelecimento'], email = body['email'], senha = p_hash)
     
     try:
         db.session.add(gestor)
@@ -32,3 +32,9 @@ def post_gestor():
     except Exception:
         traceback.print_exc()
         return jsonify({'message' : 'Não foi possível criar um gestor', 'data' : {}}), 500
+
+def gestor_by_email(email):
+    try:
+        return Gestores.query.filter(Gestores.email == email).one()
+    except:
+        return None
