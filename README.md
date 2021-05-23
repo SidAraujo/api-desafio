@@ -14,6 +14,13 @@ from app import db
 
 db.create_all()
 
+# Pedido
+Quando um pedido é solicitado ele fica com status Criado.
+O gerente pode modificar esse status para Preparando, Finalizado ou Cancelado.
+Para cancelar o pedido não deve ter o produto em estoque
+
+O cliente só pode cancelar o pedido enquanto estiver no status criado.
+
 ## Requisitos de Negócios
 ### Cadastrar o gestor
 /gestores _Method_ : POST
