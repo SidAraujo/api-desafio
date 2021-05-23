@@ -1,7 +1,7 @@
 from werkzeug.security import generate_password_hash
 from app import db
 from flask import request,jsonify
-from ..models.clientes import Clientes, cliente_schema, clientes_schema
+from ..models.pp import Clientes, cliente_schema, clientes_schema
 
 import traceback
 
