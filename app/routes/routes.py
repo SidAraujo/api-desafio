@@ -30,10 +30,10 @@ def delete_produto(current_gestor, id):
 def post_pedido(current_cliente):
     return pp.post_pedido()
 
-@app.route('/pedidos/<email>', methods=['GET'])
+@app.route('/pedidos', methods=['GET'])
 @helper.token_required
-def get_pedidos(current_cliente, email):
-    return pp.get_pedidos(email)
+def get_pedidos(current_cliente):
+    return pp.get_pedidos()
 
 @app.route('/pedidos/<id>', methods=['PUT'])
 def put_pedido(id):
