@@ -3,7 +3,8 @@ from werkzeug.wrappers import response
 from app import db
 from flask import request,jsonify
 from ..models import Gestores, Produtos, Pedidos, Clientes, Pedidosprodutos, produto_schema, produtos_schema, pedido_schema, pedidos_schema
-#from ..models.clientes import Clientes, cliente_schema
+import jwt
+from app import app
 
 import traceback
 
@@ -119,13 +120,21 @@ def post_pedido():
     return jsonify({'message' : 'Pedido cadastrado com sucesso.' , 'data': {"id":pedido['id'], 
     'Valor Total': precoTotal, 'produtos': produtos_json, 'status':pedido['status']}}), 201
 
-def get_pedidos(email):
+def get_pedidos():
     gestor = Gestores.query.limit(1).all()
     if (not gestor):
         return jsonify({'message' : 'Gestor não cadastrado.'}), 400
 
     #verificar o cliente do pedido
-    cliente_obj = Clientes.query.filter_by(email=email).first()
+    body = request.get_json()
+    if body == None:
+        return jsonify({'message' : 'É necessário um token.', 'data' : {}}), 401
+    if (not 'token' in body):
+        return jsonify({'message' : 'É necessário um token.', 'data' : {}}), 401
+    token = body['token']
+    email_token = jwt.decode(token, app.config['SECRET_KEY'], algorithms="HS256")['email']
+    
+    cliente_obj = Clientes.query.filter_by(email=email_token).first()
     if not cliente_obj:
         return jsonify({'message' : 'Não foi possível realizar o pedido, cliente não cadastrado.', 'data' : {}}), 500
     
